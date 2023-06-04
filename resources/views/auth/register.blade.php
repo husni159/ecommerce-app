@@ -29,8 +29,8 @@
     <div>
         <label for="user_type">User Type</label>
         <select id="type" name="type" required>
-            <option value="employee">Employee</option>
-            <option value="customer">Customer</option>
+            <option value="employee" >Employee</option>
+            <option value="customer" selected>Customer</option>
         </select>
     </div>
 

@@ -13,7 +13,7 @@ class User extends Authenticatable implements MustVerifyEmail
     const TYPE_CUSTOMER = 'customer';
 
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','type'
     ];
 
     protected $hidden = [

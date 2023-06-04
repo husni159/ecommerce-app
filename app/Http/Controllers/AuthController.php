@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
@@ -32,16 +31,23 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
-    
+
         if (Auth::attempt($credentials)) {
-            $this->authPage();
+            $user = Auth::user();
+
+            if ($user->isAdmin()) {
+                return redirect()->route('admin.dashboard');
+            } else {
+                return redirect()->route('products.index');
+            }
+        } else {
+            return redirect()->back()->withErrors(['email' => 'Invalid credentials']);
         }
-    
-        return redirect()->back()->withErrors(['login' => 'Invalid credentials']);
     }
+
     
     /**
      * Show the registration form.
