@@ -1,0 +1,41 @@
+    .custom-header {
+        background-color: #333;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .custom-header ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    .custom-header ul li {
+        display: inline;
+        margin-right: 10px;
+    }
+
+    .custom-header ul li a {
+        color: #fff;
+        text-decoration: none;
+        padding: 8px 16px;
+    }
+
+    .custom-header ul li a:hover {
+        background-color: #555;
+        border-radius: 4px;
+    }
+
+    .custom-header ul li button {
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        padding: 0;
+    }
+
+    .custom-header ul li button:hover {
+        text-decoration: underline;
+    }
