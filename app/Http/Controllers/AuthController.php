@@ -4,19 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
-    /**
-     * Show the login form.
-     *
-     * @return \Illuminate\View\View
-     */
-    // public function index()
-    // {
-    //     $this->authenticated();
-    // }
 
     /**
      * Show the login form.
@@ -49,6 +44,15 @@ class AuthController extends Controller
     }
     
     /**
+     * Show the registration form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showRegistrationForm()
+    {
+        return view('auth.register');
+    }
+    /**
      * Log the user out of the application.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -80,12 +84,9 @@ class AuthController extends Controller
             $user = Auth::user();
             if ($user->isAdmin()) {
                 return redirect()->route('admin.dashboard');
-            } elseif ($user->isEmployee()) {
-                return redirect()->route('employee.products');
-            } elseif ($user->isCustomer()) {
-                return redirect()->route('customer.products');
+            } elseif ($user->isCustomer() || $user->isEmployee()) {
+                return redirect()->route('products.index');
             }
-    
             // Perform actions for logged-in user
         } else {
             // User is not logged in
@@ -93,4 +94,33 @@ class AuthController extends Controller
             return view('auth.login');
         }
     }
+
+     /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    
+     public function register(Request $request)
+     {
+        $validator = Validator::make($request->all(), [
+             'name' => 'required|string|max:255',
+             'email' => 'required|string|email|max:255|unique:users',
+             'password' => 'required|string|min:6|confirmed',
+             'type' => ['required', Rule::in(['employee', 'customer'])],
+         ]);
+         if ($validator->fails()) {
+            
+            return redirect()->back()->with('error', 'Invalid Details!!');
+        }
+        User::create([
+             'name' => $request->input('name'),
+             'email' => $request->input('email'),
+             'password' => Hash::make($request->input('password')),
+             'type' => $request->input('type'),
+         ]);
+  
+         return redirect('/login')->with('success', 'Registration successful!'); // or redirect to a different page
+     }
 }

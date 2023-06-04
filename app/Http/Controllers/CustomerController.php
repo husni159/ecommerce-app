@@ -7,6 +7,13 @@ use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
+    
+    /**
+     * Display a listing of the products.
+     *
+     * @return \Illuminate\View\View
+     */
+    
     public function placeOrder(Request $request)
     {
         // Logic to place the order
@@ -32,4 +39,5 @@ class CustomerController extends Controller
         // ...
         return view('orders.show', ['order' => $order]);
     }
+
 }

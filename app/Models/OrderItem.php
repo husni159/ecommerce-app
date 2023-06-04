@@ -3,14 +3,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class OrderItem extends Model
 {
+    
     protected $fillable = [
-        'name', 'description', 'price', 'status',
+        'order_id', 'product_id', 'quantity',
     ];
-    public function orderItems()
+    public function product()
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->belongsTo(Product::class);
     }
     
     // Relationships, custom methods, or other model code here

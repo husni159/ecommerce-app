@@ -8,7 +8,7 @@ class EmployeeController extends Controller
 {
     public function createProduct()
     {
-        return view('employee.products.create');
+        return view('employee.createproduct');
     }
 
     public function storeProduct(Request $request)

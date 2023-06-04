@@ -12,7 +12,6 @@ class User extends Authenticatable implements MustVerifyEmail
     const TYPE_EMPLOYEE = 'employee';
     const TYPE_CUSTOMER = 'customer';
 
-
     protected $fillable = [
         'name', 'email', 'password',
     ];
@@ -43,4 +42,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->type === self::TYPE_CUSTOMER;
     }
+    public function userId()
+    {
+        return $this->id;
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
 }

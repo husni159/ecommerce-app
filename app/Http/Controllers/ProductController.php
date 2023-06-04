@@ -17,17 +17,10 @@ class ProductController extends Controller
     {
         $products = Product::all();
         $user = auth()->user();
+        if ($user->isCustomer()) {
+            $products = Product::where('status', 1)->get();
+        }
         return view('products.index', compact('products', 'user'));
-    }
-
-    /**
-     * Show the form for creating a new product.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function create()
-    {
-        return view('products.create');
     }
 
     /**
@@ -82,6 +75,5 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         return view('products.show', compact('product'));
-    }
-
+    } 
 }

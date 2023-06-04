@@ -13,20 +13,8 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        $products = Product::all();
-        $orders = Order::all();
-        return view('admin.dashboard', compact('products', 'orders'));
-    }
-    /**
-     * Display view products and orders.
-     *
-     * @return \Illuminate\View\View
-     */
-    
-    public function viewProducts()
-    {
-        $products = Product::all();
-        return view('admin.products.index', ['products' => $products]);
+        $orders = Order::with('user')->orderBy('id', 'desc')->get();
+        return view('admin.dashboard', compact('orders'));
     }
 
     public function approveProduct($id)
@@ -38,11 +26,6 @@ class AdminController extends Controller
         return redirect()->route('admin.products')->with('success', 'Product approved successfully');
     }
 
-    public function viewOrders()
-    {
-        $orders = Order::all();
-        return view('admin.orders.index', ['orders' => $orders]);
-    }
 
     public function changeOrderStatus($id)
     {
@@ -52,6 +35,13 @@ class AdminController extends Controller
         $order->status = 'delivered';
         $order->save();
 
-        return redirect()->route('admin.orders')->with('success', 'Order status changed successfully');
+        return redirect()->route('admin.dashboard')->with('success', 'Order status changed successfully');
+    }
+
+    public function OrderShow($id) {
+        $order = Order::with('orderItems')->findOrFail($id);
+        
+        // Pass the order data to the view
+        return view('admin.ordershow', compact('order'));
     }
 }
