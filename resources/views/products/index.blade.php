@@ -17,6 +17,9 @@
                         @if ($user->getType() === \App\Models\User::TYPE_CUSTOMER)
                             <th class="table-header">View Details</th>
                         @endif
+                        @if ($user->getType() === \App\Models\User::TYPE_ADMIN)
+                            <th class="table-header">Approve</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>

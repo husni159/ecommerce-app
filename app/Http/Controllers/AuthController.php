@@ -4,14 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Repositories\AuthRepository;
+
 use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
-
+    protected $authRepository;
+    public function __construct(AuthRepository $autRepository)
+    {
+        $this->authRepository = $autRepository;
+    }
     /**
      * Show the login form.
      *
@@ -30,21 +34,28 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $validation = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
+        if ($validation->fails()) {
+            return redirect()->back()->with('error', 'Invalid Details!!');
+        }
+        $credentials = [
+            'email' => $request->input('email'),
+            'password' => $request->input('password')
+        ];
+    
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-
             if ($user->isAdmin()) {
                 return redirect()->route('admin.dashboard');
             } else {
                 return redirect()->route('products.index');
             }
         } else {
-            return redirect()->back()->withErrors(['email' => 'Invalid credentials']);
+            return redirect()->back()->with('error', 'Invalid credentials');
         }
     }
 
@@ -95,8 +106,6 @@ class AuthController extends Controller
             }
             // Perform actions for logged-in user
         } else {
-            // User is not logged in
-            // Perform actions for non-logged-in user
             return view('auth.login');
         }
     }
@@ -116,17 +125,10 @@ class AuthController extends Controller
              'password' => 'required|string|min:6|confirmed',
              'type' => ['required', Rule::in(['employee', 'customer'])],
          ]);
-         if ($validator->fails()) {
-            
-            return redirect()->back()->with('error', 'Invalid Details!!');
+         if ($validator->fails()) { 
+            return redirect()->back()->with('error', 'Please verify details!!');
         }
-        User::create([
-             'name' => $request->input('name'),
-             'email' => $request->input('email'),
-             'password' => Hash::make($request->input('password')),
-             'type' => $request->input('type'),
-         ]);
-  
-         return redirect('/login')->with('success', 'Registration successful!'); // or redirect to a different page
+        $this->authRepository->createUser($request);
+        return redirect('/login')->with('success', 'Registration successful!'); // or redirect to a different page
      }
 }

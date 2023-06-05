@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
+    
 </head>
 <body>
     
@@ -54,9 +55,7 @@
 
         @yield('content')
     </main>
+    
 
-    <footer>
-        <!-- Add your footer content here -->
-    </footer>
 </body>
 </html>

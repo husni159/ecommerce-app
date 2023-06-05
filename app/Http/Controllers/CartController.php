@@ -3,11 +3,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
     public function store(Request $request)
-    {
+    { 
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|numeric|min:1',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->with('error', 'Invalid Details!!');
+        }
+
+        $product = Product::findOrFail($request->input('product_id'));
+
         $productId = $request->input('product_id');
         $quantity = $request->input('quantity');
         // Validate the product quantity

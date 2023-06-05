@@ -2,34 +2,36 @@
 
 @section('content')
     <div class="container">
-        <h1>My Orders</h1>
+        <h1 class="text-center">My Orders</h1>
         @if ($orders->count() > 0)
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Shipping Address</th>
-                        <th>Total Amount</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($orders as $order)
+            <div class="table-responsive">
+                <table class="table table-striped" style="max-width: 800px; margin: 0 auto;">
+                    <thead>
                         <tr>
-                            <td>{{ $order->id }}</td>
-                            <td>{{ $order->shipping_address }}</td>
-                            <td>{{ $order->total_amount }}</td>
-                            <td>{{ ucfirst($order->status) }}</td>
-                            <td>
-                                <a href="{{ route('orders.show', $order->id) }}" class="btn btn-primary">View Details</a>
-                            </td>
+                            <th>Order ID</th>
+                            <th>Shipping Address</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($orders as $order)
+                            <tr>
+                                <td>{{ $order->id }}</td>
+                                <td>{{ $order->shipping_address }}</td>
+                                <td>${{ $order->total_amount }}</td>
+                                <td>{{ ucfirst($order->status) }}</td>
+                                <td>
+                                    <a href="{{ route('orders.show', $order->id) }}" class="btn btn-primary">View Details</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         @else
-            <p>No orders found.</p>
+            <p class="text-center">No orders found.</p>
         @endif
     </div>
 @endsection
